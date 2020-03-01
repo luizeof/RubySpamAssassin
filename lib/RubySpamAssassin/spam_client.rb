@@ -17,11 +17,13 @@ class RubySpamAssassin::SpamClient
     protocol_response = send_message("SYMBOLS", message)
     result = process_headers protocol_response[0...2]
     result.tags = protocol_response[3...-1].join(" ").split(',')
+    result.tags
   end
 
   def check(message)
     protocol_response = send_message("CHECK", message)
     result = process_headers protocol_response[0...2]
+    result
   end
 
   def report(message)
@@ -47,7 +49,6 @@ class RubySpamAssassin::SpamClient
 
   alias :process :report
 
-  private
   def send_message(command, message)
     length = message.bytesize
     @socket.write(command + " SPAMC/1.2\r\n")
